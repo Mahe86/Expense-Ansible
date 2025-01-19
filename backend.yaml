@@ -4,12 +4,10 @@
   tasks:
   - name: Disable nodejs module
     ansible.builtin.command: "dnf module disable nodejs -y"
-      msg: "Disbled nodejs module"
-
+      
   - name: Enable nodejs module
     ansible.builtin.command: "dnf module enable nodejs:20 -y"
-      msg: "Enabled nodejs20 module"
-
+      
   - name: Install nodejs
     ansible.builtin.dnf:
       name: nodejs
@@ -57,3 +55,16 @@
       state: started
       enabled: true
       name: httpd
+
+  - name: Install MYSQL
+    ansible.builtin.package:
+      name: mysql
+      state: installed
+
+  - name: Load schema
+    ansible.builtin.command: mysql -h mysql.mahedevops.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
+
+  - name: restart backend service
+    ansible.builtin.service:
+      name: backend
+      state: started
