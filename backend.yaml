@@ -8,10 +8,13 @@
   - name: Enable nodejs module
     ansible.builtin.command: "dnf module enable nodejs:20 -y"
       
-  - name: Install nodejs
+  - name: Install nodejs and mysql
     ansible.builtin.package:
-      name: nodejs
+      name: "{{ item }}"
       state: installed
+    loop:
+    - nodejs
+    - mysql
 
   - name: create expense user
     ansible.builtin.user:
@@ -42,17 +45,13 @@
       src: backend.service
       dest: /etc/systemd/system/backend.service
 
-  # - name: daemon reload
-  #   ansible.builtin.systemd_service:
-  #     daemon_reload: true
-  #     state: started
-  #     enabled: true
-  #     name: httpd
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+      state: started
+      enabled: true
+      name: backend
 
-  # - name: Install MYSQL
-  #   ansible.builtin.package:
-  #     name: mysql
-  #     state: installed
 
   # - name: Load schema
   #   ansible.builtin.command: mysql -h mysql.mahedevops.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
