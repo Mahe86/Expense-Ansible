@@ -26,16 +26,12 @@
     ansible.builtin.get_url:
       url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
       dest: /tmp/backend.zip
-
-  # - name: Change Directory
-  #   ansible.builtin.package: cd /app
-  #     msg: "changed the directory"
-
-  # - name: Unzip the contents
-  #   ansible.builtin.unarchive:
-  #     src: /tmp/backend.zip
-  #     dest: /app
-  #     remote_src: yes
+ 
+  - name: Unzip the contents
+    ansible.builtin.unarchive:
+      src: /tmp/backend.zip
+      dest: /app
+      remote_src: yes
 
   # - name: Install npm modules
   #   community.general.npm:
