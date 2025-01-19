@@ -1,0 +1,59 @@
+- name: Configure backend server
+  hosts: backend
+  become: yes
+  tasks:
+  - name: Disable nodejs module
+    ansible.builtin.command: "dnf module disable nodejs -y"
+      msg: "Disbled nodejs module"
+
+  - name: Enable nodejs module
+    ansible.builtin.command: "dnf module enable nodejs:20 -y"
+      msg: "Enabled nodejs20 module"
+
+  - name: Install nodejs
+    ansible.builtin.dnf:
+      name: nodejs
+      state: installed
+
+  - name: create user
+    ansible.builtin.user:
+      name: expense
+      create: yes
+  
+  - name: Create directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: Download application content
+    ansible.builtin.get_url:
+      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+      dest: /tmp/backend.zip
+
+  - name: Change Directory
+    ansible.builtin.package: cd /app
+      msg: "changed the directory"
+
+  - name: Unzip the contents
+    ansible.builtin.unarchive:
+      src: /tmp/backend.zip
+      dest: /app
+      remote_src: yes
+
+  - name: Install npm modules
+    community.general.npm:
+      path: /app
+      executable: pip3.9
+      state: present
+
+  - name: Copy backend.service file
+    ansible.builtin.copy:
+      src: /home/ec2-user/Expense-Ansible/backend.service
+      dest: /etc/systemd/system/backend.service
+
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+      state: started
+      enabled: true
+      name: httpd
