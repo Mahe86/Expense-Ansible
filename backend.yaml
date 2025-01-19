@@ -13,10 +13,10 @@
       name: nodejs
       state: installed
 
-  # - name: create user
-  #   ansible.builtin.user:
-  #     name: expense
-  #     create: yes
+  - name: create user
+    ansible.builtin.user:
+      name: expense
+      create: yes
   
   # - name: Create directory
   #   ansible.builtin.file:
