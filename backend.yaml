@@ -33,11 +33,10 @@
       dest: /app
       remote_src: yes
 
-  # - name: Install npm modules
-  #   community.general.npm:
-  #     path: /app
-  #     executable: pip3.9
-  #     state: present
+  - name: Install npm modules
+    community.general.npm:
+      path: /app
+  
 
   # - name: Copy backend.service file
   #   ansible.builtin.copy:
