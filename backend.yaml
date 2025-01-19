@@ -45,6 +45,15 @@
       src: backend.service
       dest: /etc/systemd/system/backend.service
 
+  - name: Load schema
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: mysql.mahedevops.online
+      target: /app/schema/backend.sql
+
   - name: daemon reload
     ansible.builtin.systemd_service:
       daemon_reload: true
@@ -52,11 +61,4 @@
       enabled: true
       name: backend
 
-
-  # - name: Load schema
-  #   ansible.builtin.command: mysql -h mysql.mahedevops.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
-
-  # - name: restart backend service
-  #   ansible.builtin.service:
-  #     name: backend
-  #     state: started
+  
